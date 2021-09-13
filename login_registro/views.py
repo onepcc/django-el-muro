@@ -4,6 +4,7 @@ from login_registro.models import *
 from django.contrib import messages #para mensajes de validaciones
 import bcrypt
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 def index(request):
     context = {
@@ -158,13 +159,18 @@ def wall(request):
         return redirect('/')
         
     else:
-
         mensajes= Mensaje.objects.all()
-# TODO hacer que el borrar solo salga dentro de 30min de creado el msg
+        # TODO hacer que el borrar solo salga dentro de 30min de creado el msg
+        hace30min = timezone.now()-timezone.timedelta(minutes=30)
         
+        # mensajes30m = mensajes.filter(created_at__lt=hace30min)
+        # for m in mensajes30m:
+        #     print(30*"*")
+        #     print(m.mensaje, m.created_at)
         
         context = {
         'mensajes': mensajes,
+        '30min_ago': hace30min
         }
         return render(request, 'wall.html', context)
 
@@ -205,8 +211,6 @@ def comentario(request):
             comentario= request.POST['comentario']
                         
             )
-        
-
         messages.success(request, f"Has realizado un Comentario exitoso {request.session['nombre']}")
         print("Mensaje exitoso", comentario_db)
         

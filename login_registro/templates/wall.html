@@ -32,8 +32,7 @@
                     href="/logout">Desloguear</a>
             </div>
 
-            <h1 class='text-center my-4'>Bienvenido {{request.session.nombre}} {{request.session.apellido}}, usuario
-                N°{{request.session.id}}
+            <h1 class='text-center my-4'>Bienvenido {{request.session.nombre}} {{request.session.apellido}}
             </h1>
 
             <div class="col-sm-12 col-lg-9 mx-auto">
@@ -63,7 +62,7 @@
                         <div class="row">
                             <div class="col">
                                 {% for m in mensajes %}
-                                <div class="d-flex flex-start">
+                                <div class="d-flex flex-start mt-4">
                                     <img class="rounded-circle shadow-1-strong me-3"
                                         src="{% static 'img/'%}{{m.user.id}}.jpg" alt="avatar"
                                         width="65" height="65" />
@@ -75,11 +74,10 @@
                                                         class="small"> - hace {{m.created_at|timesince}} </span>
                                                 </p>
                                             </div>
-                                            
-                                            
                                             <p class="small mb-0">
                                                 {{m.mensaje}}
                                             </p>
+                                            
 
                                             <form action="/comentario" method="POST">
                                                 {% csrf_token %}
@@ -96,8 +94,8 @@
                                                     
                                                     <!-- TODO Cuando se pregunta por variable dentro de if, no se usa dobe llaves -->
                                                     <!-- TODO Con timesince se puede preguntar por periodos de tiempo, pero no es lo mas eficiente -->
-                                                    {% if request.session.id == m.user.id and m.created_at|timesince < "30 minutos" %} <a
-                                                    class="btn btn-danger" href="borrar_msg/{{m.id}}" role="button">Borrar Mensaje</a>
+                                                    {% if request.session.id == m.user.id and m.created_at > 30min_ago %} 
+                                                    <a class="btn btn-danger btn-sm" href="borrar_msg/{{m.id}}" role="button">Borrar Mensaje</a>
                                                     {% endif %}
                                                 </form> 
                                             </div>
@@ -111,7 +109,7 @@
                                             {% for c in m.comentarios.all reversed %}
                                             
                                             
-                                        <div class="d-flex flex-start mt-4">
+                                        <div class="d-flex flex-start mt-2">
                                             <a class="me-3" href="#">
                                                 <img class="rounded-circle shadow-1-strong"
                                                 src= "{% static 'img/'%}{{c.user.id}}.jpg"
@@ -151,3 +149,7 @@
     </div>
 
     {% endblock %}
+
+    <!-- RESPALDAR DATOS EN DB (en json)
+./ manage.py dumpdata -> data.json o py manage.py dumpdata > data.json
+./ manage.py loaddata data.json o py manage.py loaddata data.json -->
