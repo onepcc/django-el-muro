@@ -53,10 +53,10 @@ class User(models.Model):
     #comentarios, todos los comentarios escritos por el usuario, user1.comentarios.all() 
 
     def __str__(self):
-        return f"{self.firstname}"
+        return f"{self.firstname} {self.lastname}"
     
     def __repr__(self):
-        return f"{self.firstname}"
+        return f"{self.firstname} {self.lastname}"
 
 
 #THE WALL ##############################################################################
@@ -68,6 +68,8 @@ class Mensaje(models.Model):
     #comentarios , todos los comentarios hechos a un mensaje, mensaje1.comentarios.all()
     def __repr__(self):
             return f"<Usuario: {self.user.firstname},mensaje: {self.mensaje}, {self.updated_at}>"
+    def __str__(self):
+        return  f"Mensaje: {self.mensaje} de Usuario: {self.user.firstname}"
 
 class Comentario(models.Model):
     user = models.ForeignKey(User, related_name="comentarios", on_delete = models.CASCADE)
@@ -76,8 +78,8 @@ class Comentario(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    #ninjas = todos los ninjas del dojo , dojo1.ninjas.all()
-
     def __repr__(self):
-            return f"<Nombre: {self.nombre}, Ciudad {self.ciudad},estado: {self.estado}, {self.updated_at}>"
+            return f"Usuario: {self.user.firstname}, Mensaje: {self.mensaje.mensaje}, Comentario: {self.comentario}"
+    def __str__(self):
+            return f"Comentario: {self.comentario} de ({self.user.firstname}) a Mensaje: {self.mensaje.mensaje} de [{self.mensaje.user.firstname}] "
     
